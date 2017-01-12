@@ -9,7 +9,10 @@ int ledState = LOW;
 long previousTime = 0;
 // frequency and duty cycle for periodic and poisson stimulation
 const int freq = 1;
-//float duty = 1.0/2.0;
+float alpha = 1.0/2.0;
+const int dur1 = ((1000/freq)*(alpha));
+const int dur2 = ((1000/freq)*(1-alpha));
+
 
 
 // the setup function runs once when you press reset or power the board
@@ -21,17 +24,23 @@ void setup() {
 void loop()
 {
   unsigned long currentTime = millis();
-  
-  if(currentTime - previousTime > (1000/freq) {
-    previousTime = currentTime;
-    
-    if(ledStat == LOW)
+
+  if(ledState == LOW ) {
+    if (currentTime - previousTime > dur2) {
+      previousTime = currentTime;
       ledState = HIGH;
-    else
-      ledState = LOW;
-    
+      digitalWrite(ledPin, ledState);
+    }
+  }
+ if(ledState == HIGH) {
+  if (currentTime - previousTime > dur1) {
+    previousTime = currentTime;
+    ledState = LOW;
     digitalWrite(ledPin, ledState);
   }
+ }
+    
+    
 }
 
 
