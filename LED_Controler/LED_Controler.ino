@@ -4,6 +4,8 @@
 */
 
 // SPECIFY PARAMETERS FOR STIMULATION FOR ALL PINS
+#include <math.h>
+#include <stdlib.h>
 
 const int numChan = 4; // Number of channels to be used
 int myPins[] = {0,1,2,3}; // What pins will be used?
@@ -18,7 +20,7 @@ long previousTime[numChan];
 
 
 // SPECIFY PARAMETERS FOR RANDOM STIMULATION
-//const int lambda = ;
+//const int lambda = ; // this is the poission parameter which is poth the mean and the std dev
 
 
 // the setup function runs once when you press reset or power the board
@@ -58,3 +60,6 @@ for (int i = 0; i < numChan; i++){
 
 // method for possion stimulation
 }
+
+
+
