@@ -1,7 +1,11 @@
 /*
-  C. elegans optogenetic control for 8 parallel systems of four LEDs
-  This
+  C. elegans optogenetic control for 8 parallel systems of LED arrays to stimulate c. elegans 
 */
+
+// TODO: Print on and off times for the random stimulation to serial port so that 
+// python can writes this to a file.
+// Create a way to toggle the stimulation on and off so that the video program can synchronize
+// with and control the stimulation
 
 // SPECIFY PARAMETERS FOR STIMULATION FOR ALL PINS
 
@@ -31,10 +35,11 @@ float lambdaOFF[] = {100, 10}; // lambda for off times
 boolean ledState_Periodic[numChan_Periodic];
 boolean ledState_Poission[numChan_Poission];
 long previousTime[numChan_Periodic];
-
+unsigned long t;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
+  Serial.begin(115200);
   // initialize digital pin LED_BUILTIN as an output.
   for (int i = 0; i < numChan_Periodic; i++){
     pinMode(Periodic_Pins[i], OUTPUT);
@@ -86,6 +91,13 @@ for (int i = 0; i < numChan_Periodic; i++){
               digitalWrite(Poission_Pins[i], ledState_Poission[i]);
               float k = poiss(lambdaOFF[i]); // pick a Off duration using lamda off
               nextTime[i] = currentTime + k;
+              t = millis();
+              Serial.print(t);
+              Serial.print(" ");
+              Serial.print(Poission_Pins[i]);
+              Serial.print(" ");
+              Serial.print("Turned Off \n");
+
         }
      }
 
@@ -95,6 +107,12 @@ for (int i = 0; i < numChan_Periodic; i++){
               digitalWrite(Poission_Pins[i], ledState_Poission[i]);
               float k = poiss(lambdaON[i]); // pick a On duration using lamda on
               nextTime[i] = currentTime + k;
+              t = millis();
+              Serial.print(t);
+              Serial.print(" ");
+              Serial.print(Poission_Pins[i]);
+              Serial.print(" ");
+              Serial.print("Turned On \n");
         }
      }
   }
