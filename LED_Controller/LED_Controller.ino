@@ -11,24 +11,24 @@
 // SPECIFY PARAMETERS FOR STIMULATION FOR ALL PINS
 
 // CHANNEL VARIABLES
-const int numChan_Periodic = 2;
-const int numChan_Poission = 2;
+const int numChan_Periodic = 4;
+const int numChan_Poission = 0;
 
 int myPins[] = {0,1,2,3}; // What pins will be used?
-int Periodic_Pins[] = {0,1}; // What pins will be used?
-int Poission_Pins[] = {2,3}; // What pins will be used?
+int Periodic_Pins[] = {0,1,2,3}; // What pins will be used?
+int Poission_Pins[] = {}; // What pins will be used?
 
 
 // SPECIFY PARAMETERS FOR PERIODIC STIMULATION
-float omega[] = {1000,500}; // specify frequency in times per MINUTE
-float alpha[] = {1.0/5.0, 1.0/5.0}; // duty cycle for periodic stim
+float omega[] = {1,1,1,1}; // specify frequency in times per MINUTE
+float alpha[] = {1.0/12.0, 1.0/12.0, 1.0/12.0, 1.0/12.0}; // duty cycle for periodic stim
 float periodicON[numChan_Periodic];
 float periodicOFF[numChan_Periodic];
 float nextTime[numChan_Periodic];
 
 // SPECIFY PARAMETERS FOR RANDOM STIMULATION
-float lambdaON[] = {50, 15}; // this is the poission parameter for the distrubtion of on times 
-float lambdaOFF[] = {100, 10}; // lambda for off times
+float lambdaON[] = {}; // this is the poission parameter for the distrubtion of on times 
+float lambdaOFF[] = {}; // lambda for off times
 
 
 // Initialize other stuff
@@ -81,6 +81,12 @@ if(rig_status){
             previousTime[i] = currentTime;
             ledState_Periodic[i] = HIGH;
             digitalWrite(Periodic_Pins[i], ledState_Periodic[i]);
+            t = millis();
+                Serial.print(t);
+                Serial.print(" ");
+                Serial.print(Periodic_Pins[i]);
+                Serial.print(" ");
+                Serial.print("On \n");
           }
     }
     }
