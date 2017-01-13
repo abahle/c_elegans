@@ -12,8 +12,8 @@ long previousTime[numChan];
 // Fill values for empty parameter vectors
 
 // SPECIFY PARAMETERS FOR RANDOM STIMULATION
-float lambdaON[] = {50, 15, 300, 20}; // this is the poission parameter which is poth the mean and the std dev
-float labmdaOFF[] = {100, 10, 300, 55}
+float lambdaON[] = {50, 15, 300, 20}; // this is the poission parameter for the distrubtion of on times which is poth the mean and the std dev
+float lambdaOFF[] = {100, 10, 300, 55}; // lambda for off times
 float nextTime[] = {0.0, 0.0, 0.0, 0.0};
 
 // the setup function runs once when you press reset or power the board
