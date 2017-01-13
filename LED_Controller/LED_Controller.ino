@@ -2,10 +2,9 @@
   C. elegans optogenetic control for 8 parallel systems of LED arrays to stimulate c. elegans 
 */
 
-// TODO: Print on and off times for the random stimulation to serial port so that 
-// python can writes this to a file.
-// Create a way to toggle the stimulation on and off so that the video program can synchronize
-// with and control the stimulation
+// TODO: 
+// SHOULD BE ABLE TO RECEIVE TWO CHARACTERS OF THE SERIAL PORT 
+// ONE FOR ON AND ONE FOR OFF
 
 // SPECIFY PARAMETERS FOR STIMULATION FOR ALL PINS
 
@@ -67,26 +66,26 @@ unsigned long currentTime = millis();
 
 //PERIODIC STIMULATION METHODS
 for (int i = 0; i < numChan_Periodic; i++){
- if(ledState_Periodic[i] == HIGH) {
-  if (currentTime - previousTime[i] > periodicON[i]) {
-    previousTime[i] = currentTime;
-    ledState_Periodic[i] = LOW;
-    digitalWrite(Periodic_Pins[i], ledState_Periodic[i]);
-  }
- }
+   if(ledState_Periodic[i] == HIGH) {
+      if (currentTime - previousTime[i] > periodicON[i]) {
+        previousTime[i] = currentTime;
+        ledState_Periodic[i] = LOW;
+        digitalWrite(Periodic_Pins[i], ledState_Periodic[i]);
+      }
+   }
     if(ledState_Periodic[i] == LOW ) {
-    if (currentTime - previousTime[i] > periodicOFF[i]) {
-      previousTime[i] = currentTime;
-      ledState_Periodic[i] = HIGH;
-      digitalWrite(Periodic_Pins[i], ledState_Periodic[i]);
-    }
+      if (currentTime - previousTime[i] > periodicOFF[i]) {
+          previousTime[i] = currentTime;
+          ledState_Periodic[i] = HIGH;
+          digitalWrite(Periodic_Pins[i], ledState_Periodic[i]);
+        }
   }
-}
+  }
 
 // RANDOM STIMULATION METHODS
   for (int i = 0; i < numChan_Poission; i++){
       if(ledState_Poission[i] == HIGH) {
-        if (currentTime > nextTime[i]) {
+          if (currentTime > nextTime[i]) {
               ledState_Poission[i] = LOW;
               digitalWrite(Poission_Pins[i], ledState_Poission[i]);
               float k = poiss(lambdaOFF[i]); // pick a Off duration using lamda off
@@ -96,13 +95,13 @@ for (int i = 0; i < numChan_Periodic; i++){
               Serial.print(" ");
               Serial.print(Poission_Pins[i]);
               Serial.print(" ");
-              Serial.print("Turned Off \n");
+              Serial.print("Off \n");
 
         }
      }
 
        if(ledState_Poission[i] == LOW) {
-        if (currentTime > nextTime[i]) {
+           if (currentTime > nextTime[i]) {
               ledState_Poission[i] = HIGH;
               digitalWrite(Poission_Pins[i], ledState_Poission[i]);
               float k = poiss(lambdaON[i]); // pick a On duration using lamda on
@@ -112,7 +111,7 @@ for (int i = 0; i < numChan_Periodic; i++){
               Serial.print(" ");
               Serial.print(Poission_Pins[i]);
               Serial.print(" ");
-              Serial.print("Turned On \n");
+              Serial.print("On \n");
         }
      }
   }
