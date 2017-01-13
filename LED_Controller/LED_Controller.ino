@@ -5,6 +5,8 @@
 // TODO: 
 // SHOULD BE ABLE TO RECEIVE TWO CHARACTERS OF THE SERIAL PORT 
 // ONE FOR ON AND ONE FOR OFF
+// Test all periodic or all random
+
 
 // SPECIFY PARAMETERS FOR STIMULATION FOR ALL PINS
 
@@ -15,7 +17,6 @@ const int numChan_Poission = 2;
 int myPins[] = {0,1,2,3}; // What pins will be used?
 int Periodic_Pins[] = {0,1}; // What pins will be used?
 int Poission_Pins[] = {2,3}; // What pins will be used?
-//char stim_type[] = {}; // Which channels to you want to be periodic and
 
 
 // SPECIFY PARAMETERS FOR PERIODIC STIMULATION
@@ -35,6 +36,7 @@ boolean ledState_Periodic[numChan_Periodic];
 boolean ledState_Poission[numChan_Poission];
 long previousTime[numChan_Periodic];
 unsigned long t;
+boolean rig_status = false;
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -64,40 +66,41 @@ void loop() {
 // method for oscillating stimulation
 unsigned long currentTime = millis();
 
-//PERIODIC STIMULATION METHODS
-for (int i = 0; i < numChan_Periodic; i++){
-   if(ledState_Periodic[i] == HIGH) {
-      if (currentTime - previousTime[i] > periodicON[i]) {
-        previousTime[i] = currentTime;
-        ledState_Periodic[i] = LOW;
-        digitalWrite(Periodic_Pins[i], ledState_Periodic[i]);
-      }
-   }
-    if(ledState_Periodic[i] == LOW ) {
-      if (currentTime - previousTime[i] > periodicOFF[i]) {
+if(rigstatus){
+  //PERIODIC STIMULATION METHODS
+  for (int i = 0; i < numChan_Periodic; i++){
+     if(ledState_Periodic[i] == HIGH) {
+        if (currentTime - previousTime[i] > periodicON[i]) {
           previousTime[i] = currentTime;
-          ledState_Periodic[i] = HIGH;
+          ledState_Periodic[i] = LOW;
           digitalWrite(Periodic_Pins[i], ledState_Periodic[i]);
         }
-  }
-  }
-
-// RANDOM STIMULATION METHODS
-  for (int i = 0; i < numChan_Poission; i++){
-      if(ledState_Poission[i] == HIGH) {
-          if (currentTime > nextTime[i]) {
-              ledState_Poission[i] = LOW;
-              digitalWrite(Poission_Pins[i], ledState_Poission[i]);
-              float k = poiss(lambdaOFF[i]); // pick a Off duration using lamda off
-              nextTime[i] = currentTime + k;
-              t = millis();
-              Serial.print(t);
-              Serial.print(" ");
-              Serial.print(Poission_Pins[i]);
-              Serial.print(" ");
-              Serial.print("Off \n");
-
-        }
+     }
+      if(ledState_Periodic[i] == LOW ) {
+        if (currentTime - previousTime[i] > periodicOFF[i]) {
+            previousTime[i] = currentTime;
+            ledState_Periodic[i] = HIGH;
+            digitalWrite(Periodic_Pins[i], ledState_Periodic[i]);
+          }
+    }
+    }
+  
+  // RANDOM STIMULATION METHODS
+    for (int i = 0; i < numChan_Poission; i++){
+        if(ledState_Poission[i] == HIGH) {
+            if (currentTime > nextTime[i]) {
+                ledState_Poission[i] = LOW;
+                digitalWrite(Poission_Pins[i], ledState_Poission[i]);
+                float k = poiss(lambdaOFF[i]); // pick a Off duration using lamda off
+                nextTime[i] = currentTime + k;
+                t = millis();
+                Serial.print(t);
+                Serial.print(" ");
+                Serial.print(Poission_Pins[i]);
+                Serial.print(" ");
+                Serial.print("Off \n");
+  
+          }
      }
 
        if(ledState_Poission[i] == LOW) {
@@ -115,6 +118,28 @@ for (int i = 0; i < numChan_Periodic; i++){
         }
      }
   }
+}
+
+ // METHOD FOR TURNING STIMULATION ON AND OFF
+
+  if (Serial.available()>1){
+    char input = Serial.read()-65;
+    Serial. println((int) val);
+    if (input == 83){ // "S" was entered - start!
+      // Set some variable to a permissve state
+      if(~rig_status_{
+        rig_status = true;
+        Serial.println("Turned rig on");
+      }
+    }
+      
+    if(input == 88){ // "X" was entered - stop!
+      // Set the same variable to a non-permissive state
+      if(rig_status){
+      rig_status = false;
+      Serial.println("Turned rig off");
+      }
+    }
 
 
 
