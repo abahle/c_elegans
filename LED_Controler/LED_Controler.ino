@@ -4,23 +4,26 @@
 */
 
 // SPECIFY PARAMETERS FOR STIMULATION FOR ALL PINS
-#include <math.h>
-#include <stdlib.h>
+
 
 const int numChan = 4; // Number of channels to be used
 int myPins[] = {0,1,2,3}; // What pins will be used?
 // SPECIFY PARAMETERS FOR PERIODIC STIMULATION
-float omega[] = {10,20,40,40}; // specify frequency in times per MINUTE
+float omega[] = {100,100,100,100}; // specify frequency in times per MINUTE
 float alpha[] = {1.0/5.0, 1.0/5.0, 1.0/5.0, 1.0/5.0}; // specify duty cycle for periodic stim
-int on[numChan];
-int off[numChan];
+float on[numChan];
+float off[numChan];
 boolean ledState[numChan];
 long previousTime[numChan];
+
 // Fill values for empty parameter vectors
 
 
 // SPECIFY PARAMETERS FOR RANDOM STIMULATION
-//const int lambda = ; // this is the poission parameter which is poth the mean and the std dev
+
+
+//const int lambda = ;
+
 
 
 // the setup function runs once when you press reset or power the board
@@ -31,6 +34,7 @@ void setup() {
     ledState[i] = LOW;
     on[i] = ((1000*60/omega[i])*(alpha[i]));
     off[i] = ((1000*60/omega[i])*(1-alpha[i]));
+
     previousTime[i] = 0;
   }
 
@@ -59,7 +63,9 @@ for (int i = 0; i < numChan; i++){
 }
 
 // method for possion stimulation
+
 }
+
 
 
 
