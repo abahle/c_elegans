@@ -6,7 +6,6 @@
 // SPECIFY PARAMETERS FOR STIMULATION FOR ALL PINS
 
 // CHANNEL VARIABLES
-const int numChan = 4; // Number of channels to be used
 const int numChan_Periodic = 2;
 const int numChan_Poission = 2;
 
@@ -18,19 +17,20 @@ int Poission_Pins[] = {2,3}; // What pins will be used?
 
 // SPECIFY PARAMETERS FOR PERIODIC STIMULATION
 float omega[] = {1000,500}; // specify frequency in times per MINUTE
-float alpha[] = {1.0/5.0, 1.0/5.0}; // specify duty cycle for periodic stim
-float periodicON[numChan];
-float periodicOFF[numChan];
+float alpha[] = {1.0/5.0, 1.0/5.0}; // duty cycle for periodic stim
+float periodicON[numChan_Periodic];
+float periodicOFF[numChan_Periodic];
+float nextTime[numChan_Periodic];
 
 // SPECIFY PARAMETERS FOR RANDOM STIMULATION
-float lambdaON[] = {50, 15}; // this is the poission parameter for the distrubtion of on times which is poth the mean and the std dev
+float lambdaON[] = {50, 15}; // this is the poission parameter for the distrubtion of on times 
 float lambdaOFF[] = {100, 10}; // lambda for off times
-float nextTime[] = {0.0, 0.0};
+
 
 // Initialize other stuff
 boolean ledState_Periodic[numChan_Periodic];
 boolean ledState_Poission[numChan_Poission];
-long previousTime[numChan];
+long previousTime[numChan_Periodic];
 
 
 // the setup function runs once when you press reset or power the board
@@ -42,6 +42,7 @@ void setup() {
     periodicON[i] = ((1000*60/omega[i])*(alpha[i]));
     periodicOFF[i] = ((1000*60/omega[i])*(1-alpha[i]));
     previousTime[i] = 0;
+    nextTime[i] = 0;
   }
 
     for (int i = 0; i < numChan_Poission; i++){
