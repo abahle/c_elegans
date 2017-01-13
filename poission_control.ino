@@ -12,7 +12,8 @@ long previousTime[numChan];
 // Fill values for empty parameter vectors
 
 // SPECIFY PARAMETERS FOR RANDOM STIMULATION
-float lambda[] = {50, 15, 300, 20}; // this is the poission parameter which is poth the mean and the std dev
+float lambdaON[] = {50, 15, 300, 20}; // this is the poission parameter which is poth the mean and the std dev
+float labmdaOFF[] = {100, 10, 300, 55}
 float nextTime[] = {0.0, 0.0, 0.0, 0.0};
 
 // the setup function runs once when you press reset or power the board
@@ -36,7 +37,7 @@ unsigned long currentTime = millis();
         if (currentTime > nextTime[i]) {
               ledState[i] = LOW;
               digitalWrite(myPins[i], ledState[i]);
-              float k = poiss(lambda[i]);
+              float k = poiss(lambdaOFF[i]); // pick a Off duration using lamda off
               nextTime[i] = currentTime + k;
         }
      }
@@ -45,7 +46,7 @@ unsigned long currentTime = millis();
         if (currentTime > nextTime[i]) {
               ledState[i] = HIGH;
               digitalWrite(myPins[i], ledState[i]);
-              float k = poiss(lambda[i]);
+              float k = poiss(lambdaON[i]); // pick a On duration using lamda on
               nextTime[i] = currentTime + k;
         }
      }
