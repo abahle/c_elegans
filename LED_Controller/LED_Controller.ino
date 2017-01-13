@@ -13,7 +13,7 @@ const int numChan_Poission = 2;
 int myPins[] = {0,1,2,3}; // What pins will be used?
 int Periodic_Pins[] = {0,1}; // What pins will be used?
 int Poission_Pins[] = {2,3}; // What pins will be used?
-//char stim_type[] = {}; // Which channels to you want to be periodic and 
+//char stim_type[] = {}; // Which channels to you want to be periodic and
 
 
 // SPECIFY PARAMETERS FOR PERIODIC STIMULATION
@@ -27,7 +27,7 @@ float lambdaON[] = {50, 15}; // this is the poission parameter for the distrubti
 float lambdaOFF[] = {100, 10}; // lambda for off times
 float nextTime[] = {0.0, 0.0};
 
-// Initialize other stuff 
+// Initialize other stuff
 boolean ledState_Periodic[numChan_Periodic];
 boolean ledState_Poission[numChan_Poission];
 long previousTime[numChan];
@@ -43,7 +43,7 @@ void setup() {
     periodicOFF[i] = ((1000*60/omega[i])*(1-alpha[i]));
     previousTime[i] = 0;
   }
-  
+
     for (int i = 0; i < numChan_Poission; i++){
     pinMode(Poission_Pins[i], OUTPUT);
     ledState_Poission[i] = LOW;
@@ -106,7 +106,3 @@ for (int i = 0; i < numChan_Periodic; i++){
       {
         return 1000*60*(-log(1.0f - random(RAND_MAX) / ((float)RAND_MAX + 1)) / lambda);
       }
-
-
-
-
