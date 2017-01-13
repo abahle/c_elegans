@@ -66,7 +66,7 @@ void loop() {
 // method for oscillating stimulation
 unsigned long currentTime = millis();
 
-if(rigstatus){
+if(rig_status){
   //PERIODIC STIMULATION METHODS
   for (int i = 0; i < numChan_Periodic; i++){
      if(ledState_Periodic[i] == HIGH) {
@@ -122,29 +122,34 @@ if(rigstatus){
 
  // METHOD FOR TURNING STIMULATION ON AND OFF
 
-  if (Serial.available()>1){
-    char input = Serial.read()-65;
-    Serial. println((int) val);
-    if (input == 83){ // "S" was entered - start!
+  if (Serial.available()>0){
+    char input = Serial.read();
+    if (input == 'S'){ // "S" was entered - start!
       // Set some variable to a permissve state
-      if(~rig_status_{
-        rig_status = true;
-        Serial.println("Turned rig on");
+      if(~rig_status){
+        rig_status = true;      
       }
     }
       
-    if(input == 88){ // "X" was entered - stop!
+    if(input == 'X'){ // "X" was entered - stop!
       // Set the same variable to a non-permissive state
       if(rig_status){
       rig_status = false;
-      Serial.println("Turned rig off");
+      // SET ALL PINS TO LOW
+        for (int i = 0; i < numChan_Periodic; i++){
+          digitalWrite(Periodic_Pins[i], LOW);
+        }
+    
+        for (int i = 0; i < numChan_Poission; i++){
+          digitalWrite(Poission_Pins[i], LOW);
+        }
       }
     }
 
-
+  }
 
 }
-  // method for possion stimulation
+  // method for geting a duration from a poission distribution
         float poiss(float lambda)
       {
         return 1000*60*(-log(1.0f - random(RAND_MAX) / ((float)RAND_MAX + 1)) / lambda);
