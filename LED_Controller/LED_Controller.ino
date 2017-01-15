@@ -11,17 +11,17 @@
 // SPECIFY PARAMETERS FOR STIMULATION FOR ALL PINS
 
 // CHANNEL VARIABLES
-const int numChan_Periodic = 4;
+const int numChan_Periodic = 3;
 const int numChan_Poission = 0;
 
-int myPins[] = {0,1,2,3}; // What pins will be used?
-int Periodic_Pins[] = {0,1,2,3}; // What pins will be used?
+int myPins[] = {0,1,2}; // What pins will be used?
+int Periodic_Pins[] = {0,1,2}; // What pins will be used?
 int Poission_Pins[] = {}; // What pins will be used?
 
 
 // SPECIFY PARAMETERS FOR PERIODIC STIMULATION
-float omega[] = {1.0/5.0,1.0/5.0,1.0/5.0,1.0/5.0}; // specify frequency in times per MINUTE
-float alpha[] = {5.0/300.0, 5.0/300.0, 5.0/300.0, 5.0/300.0}; // duty cycle for periodic stim
+float omega[] = {1.0/5.0,1.0/5.0,1.0/5.0}; // specify frequency in times per MINUTE
+float alpha[] = {1.0/60.0, 1.0/60.0, 1.0/60.0,}; // duty cycle for periodic stim
 float periodicON[numChan_Periodic];
 float periodicOFF[numChan_Periodic];
 float nextTime[numChan_Periodic];
