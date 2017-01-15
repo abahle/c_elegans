@@ -20,8 +20,8 @@ int Poission_Pins[] = {}; // What pins will be used?
 
 
 // SPECIFY PARAMETERS FOR PERIODIC STIMULATION
-float omega[] = {1,1,1,1}; // specify frequency in times per MINUTE
-float alpha[] = {1.0/12.0, 1.0/12.0, 1.0/12.0, 1.0/12.0}; // duty cycle for periodic stim
+float omega[] = {1.0/5.0,1.0/5.0,1.0/5.0,1.0/5.0}; // specify frequency in times per MINUTE
+float alpha[] = {5.0/300.0, 5.0/300.0, 5.0/300.0, 5.0/300.0}; // duty cycle for periodic stim
 float periodicON[numChan_Periodic];
 float periodicOFF[numChan_Periodic];
 float nextTime[numChan_Periodic];
