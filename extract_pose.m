@@ -44,7 +44,7 @@ function map = extract_pose(filein,varargin)
     names = {names.name};
     map = cell(1,length(names));
     
-    for ii = 1:20%length(names)
+    for ii = 1:50%length(names)
      %% Process the image and get releavant properties           
         fprintf('processing image #%i\n',ii)
         Ori = im2double(imread(names{randi(length(names),1)}));
@@ -54,12 +54,15 @@ function map = extract_pose(filein,varargin)
         thresh = 3*sqrt(var(IM(:))); %calculate the threshold
         IM = analysis.process(IM,thresh,10,1); % process
         
+        [boxes,~] = imOrientedBox(IM);
+        theta = -deg2rad(boxes(5));
+        
         boundary = bwperim(IM); % get boundary
         center = bwmorph(IM,'thin',Inf); % get center line
             
-        [b,a] = find(center == 1);
-        r = analysis.total_ls(a,b); % fit with total least squares     
-        theta = 2*pi-atan(-r);  % get the optimal angle to rotate               
+%         [b,a] = find(center == 1);
+%         r = analysis.total_ls(a,b); % fit with total least squares     
+%         theta = 2*pi-atan(-r);  % get the optimal angle to rotate               
         map{ii} = analysis.align(theta,boundary,center); % align
         
 %         r2 = analysis.regular_ls(map{ii}.center(1,:),map{ii}.center(2,:)); 
@@ -72,10 +75,10 @@ function map = extract_pose(filein,varargin)
 
 
     %% Fit interpolating spline to rotated center line and get angles
-       N = 101;
-       xx = linspace(min(map{ii}.center(1,:)),max(map{ii}.center(1,:)),N);
-       yy = spline(map{ii}.center(1,:),map{ii}.center(2,:),xx);        
-       map{ii}.angles = analysis.get_angles(xx,yy,N);
+%        N = 101;
+%        xx = linspace(min(map{ii}.center(1,:)),max(map{ii}.center(1,:)),N);
+%        yy = spline(map{ii}.center(1,:),map{ii}.center(2,:),xx);        
+%        map{ii}.angles = analysis.get_angles(xx,yy,N);
 
 %% plot          
         if ~isempty(fileout)   
@@ -89,7 +92,7 @@ function map = extract_pose(filein,varargin)
                     plot(map{ii}.center(1,:),map{ii}.center(2,:),'r.'), axis equal % plot center
                     %plot(xx,yy,'bo'), axis equal
                 subplot(3,2,5:6)
-                    plot(1:N-1,map{ii}.angles), title('angles of the worm pose') % plot angles
+                    %plot(1:N-1,map{ii}.angles), title('angles of the worm pose') % plot angles
     %         subplot(4,2,7:8)
     %             
     %             imagesc(cProfile)
