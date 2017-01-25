@@ -47,12 +47,12 @@ function map = extract_pose(filein,varargin)
     for ii = 1:50%length(names)
      %% Process the image and get releavant properties           
         fprintf('processing image #%i\n',ii)
-        Ori = im2double(imread(names{randi(length(names),1)}));
-        %Ori = im2double(imread(names{ii})); % save the original image
+        %Ori = im2double(imread(names{randi(length(names),1)}));
+        Ori = im2double(imread(names{ii})); % save the original image
         IM = (Ori);
         
         thresh = 3*sqrt(var(IM(:))); %calculate the threshold
-        IM = analysis.process(IM,thresh,10,1); % process
+        IM = analysis.process(IM,thresh,15,1); % process
         
         [boxes,~] = imOrientedBox(IM);
         theta = -deg2rad(boxes(5));
@@ -75,10 +75,10 @@ function map = extract_pose(filein,varargin)
 
 
     %% Fit interpolating spline to rotated center line and get angles
-%        N = 101;
-%        xx = linspace(min(map{ii}.center(1,:)),max(map{ii}.center(1,:)),N);
-%        yy = spline(map{ii}.center(1,:),map{ii}.center(2,:),xx);        
-%        map{ii}.angles = analysis.get_angles(xx,yy,N);
+       N = 101;
+       xx = linspace(min(map{ii}.center(1,:)),max(map{ii}.center(1,:)),N);
+       yy = spline(map{ii}.center(1,:),map{ii}.center(2,:),xx);        
+       map{ii}.angles = analysis.get_angles(xx,yy,N);
 
 %% plot          
         if ~isempty(fileout)   
@@ -89,10 +89,10 @@ function map = extract_pose(filein,varargin)
                     imagesc(IM) % plot binary image
                 subplot(3,2,3:4)
                     plot(map{ii}.boundary(1,:),map{ii}.boundary(2,:),'k.'), hold on % plot boundary 
-                    plot(map{ii}.center(1,:),map{ii}.center(2,:),'r.'), axis equal % plot center
+                    plot(map{ii}.center(1,:),map{ii}.center(2,:),'r.'), axis square % plot center
                     %plot(xx,yy,'bo'), axis equal
                 subplot(3,2,5:6)
-                    %plot(1:N-1,map{ii}.angles), title('angles of the worm pose') % plot angles
+                    plot(1:N-1,map{ii}.angles), title('angles of the worm pose') % plot angles
     %         subplot(4,2,7:8)
     %             
     %             imagesc(cProfile)
