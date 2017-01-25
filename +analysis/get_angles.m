@@ -5,4 +5,6 @@ function angles = get_angles(x,y,n)
     for i = 1:n-1
         angles(i) = atan((y(i+1)-y(i))/(x(i+1)-x(i)));
     end
+    
+    angles = angles - sum(angles)/100;
 end
