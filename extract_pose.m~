@@ -57,15 +57,16 @@ function map = extract_pose(filein,varargin)
         boundary = bwperim(IM); % get boundary
         center = bwmorph(IM,'thin',Inf); % get center line
             
-        [y,x] = find(IM == 1);
-        r = analysis.total_ls(boundary); % fit with total least squares     
+        [b,a] = find(center == 1);
+        r = analysis.total_ls(a,b); % fit with total least squares     
         theta = 2*pi-atan(-r);  % get the optimal angle to rotate               
         map{ii} = analysis.align(theta,boundary,center); % align
         
-        r2 = analysis.regular_ls(IM) 
-        [y,x] = find(center == 1);
+        r2 = analysis.regular_ls(map{ii}.center(1,:),map{ii}.center(2,:)); 
+        yp = map{ii}.center(1,:)*r2;
         figure, plot(x,y,'k.', ...
-         map{ii}.center(1,:),map{ii}.center(2,:),'r.')
+         map{ii}.center(1,:),map{ii}.center(2,:),'r.', ...
+            map{ii}.center(1,:),yp,'-b')
         
         map{ii}.cProfile = Ori.*center; % get the profile of the worm center
 

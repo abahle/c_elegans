@@ -45,10 +45,10 @@ function map = extract_pose(filein,varargin)
     map = cell(1,length(names));
     
     for ii = 1:20%length(names)
-     %% Process the image and get releavant properties   
-        %Ori = im2double(imread(names{randi(length(names),1)}));
+     %% Process the image and get releavant properties           
         fprintf('processing image #%i\n',ii)
-        Ori = im2double(imread(names{ii})); % save the original image
+        Ori = im2double(imread(names{randi(length(names),1)}));
+        %Ori = im2double(imread(names{ii})); % save the original image
         IM = (Ori);
         
         thresh = 3*sqrt(var(IM(:))); %calculate the threshold
@@ -58,15 +58,15 @@ function map = extract_pose(filein,varargin)
         center = bwmorph(IM,'thin',Inf); % get center line
             
         [b,a] = find(center == 1);
-        r = analysis.total_ls(x,y); % fit with total least squares     
+        r = analysis.total_ls(a,b); % fit with total least squares     
         theta = 2*pi-atan(-r);  % get the optimal angle to rotate               
         map{ii} = analysis.align(theta,boundary,center); % align
         
-        r2 = analysis.regular_ls(map{ii}.center(1,:),map{ii}.center(2,:)); 
-        yp = x*r2;
-        figure, plot(x,y,'k.', ...
-         map{ii}.center(1,:),map{ii}.center(2,:),'r.', ...
-            )
+%         r2 = analysis.regular_ls(map{ii}.center(1,:),map{ii}.center(2,:)); 
+%         yp = map{ii}.center(1,:)*r2;
+%         figure, plot(x,y,'k.', ...
+%          map{ii}.center(1,:),map{ii}.center(2,:),'r.', ...
+%             map{ii}.center(1,:),yp,'-b')
         
         map{ii}.cProfile = Ori.*center; % get the profile of the worm center
 
