@@ -126,7 +126,7 @@ nTheta = length(theta);
 
 % extract the set of labels is necessary, without the background
 if isempty(labels)
-    labels = imFindLabels(img);
+    labels = analysis.imFindLabels(img);
 end
 nLabels = length(labels);
 
