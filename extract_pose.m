@@ -43,15 +43,16 @@ function map = extract_pose(filein,varargin)
     names = dir(filepath);
     names = {names.name};
     map = cell(1,length(names));
+    err = 0;
     
-    for ii = 1:50%length(names)
-     %% Process the image and get releavant properties           
-        status = false;   
+    for ii = 1:length(names)
+        %% Process the image and get releavant properties           
+        status = false;
         fprintf('processing image #%i\n',ii)
-        fnum = randi(length(names),1);
-        Ori = im2double(imread(names{fnum}));
-        %fnum = ii;
-        %Ori = im2double(imread(names{fnum})); % save the original image
+%         fnum = randi(length(names),1);
+%         Ori = im2double(imread(names{fnum}));
+        fnum = ii;
+        Ori = im2double(imread(sprintf('%s/%s',filein,names{fnum})));
         IM = (Ori);
         
         thresh = 3*sqrt(var(IM(:))); %calculate the threshold
@@ -62,18 +63,21 @@ function map = extract_pose(filein,varargin)
         
         boundary = bwperim(IM); % get boundary
         center = bwmorph(IM,'thin',Inf); % get center line
-            
-%         [b,a] = find(center == 1);
-%         r = analysis.total_ls(a,b); % fit with total least squares     
-%         theta = 2*pi-atan(-r);  % get the optimal angle to rotate               
-        map{ii} = analysis.align(theta,boundary,center); % align
+
         
-%         r2 = analysis.regular_ls(map{ii}.center(1,:),map{ii}.center(2,:)); 
-%         yp = map{ii}.center(1,:)*r2;
-%         figure, plot(x,y,'k.', ...
-%          map{ii}.center(1,:),map{ii}.center(2,:),'r.', ...
-%             map{ii}.center(1,:),yp,'-b')
+        ends = bwmorph(center,'endpoints'); % get endpoints
         
+         if ii == 1
+            map{ii}.head = analysis.endpointvalues(ends,center,Ori,100); %
+        else
+            [y,x] = find(ends == 1);
+            X = [y,x];
+            map{ii}.head = X(knnsearch(X,map{ii-1}.head),:);
+        end
+           
+        [map{ii}.boundary,map{ii}.center,map{ii}.hrot] = analysis.align(theta,boundary,center,map{ii}.head); % align
+        
+
         map{ii}.cProfile = Ori.*center; % get the profile of the worm center
 
 
@@ -85,7 +89,8 @@ function map = extract_pose(filein,varargin)
        map{ii}.angles = analysis.get_angles(xx,yy,N);
        status = true;
     catch
-        fprintf('could not fit spline to file # %i',fnum)
+        fprintf('could not fit spline to file # %i\n',fnum)
+        err = err+1;
     end
 %% plot          
         if ~isempty(fileout)   
@@ -97,20 +102,23 @@ function map = extract_pose(filein,varargin)
                 subplot(3,2,2:2:4)
                     plot(map{ii}.boundary(2,:),map{ii}.boundary(1,:),'k.'), hold on % plot boundary 
                     plot(map{ii}.center(2,:),map{ii}.center(1,:),'r.'), axis equal % plot center
+                    plot(map{ii}.hrot(2,:),map{ii}.hrot(1,:),'b.','MarkerSize',10) % plot ends points
                     %plot(xx,yy,'bo'), axis equal
                 
                 if status
                     subplot(3,2,5:6)
-                    plot(1:N-1,map{ii}.angles), title('angles of the worm pose') % plot angles
+                    plot(1:N-1,map{ii}.angles), title('angles of the worm pose'), ylim([-pi,pi]) % plot angles
                 end
                 %subplot(4,2,7:8)
     %             
     %             imagesc(cProfile)
     %             
                          
-            saveas(gca, fullfile(fileout, sprintf('%i',fnum)),'jpeg');            
-        end % end of plotting function
+            saveas(gca, fullfile(fileout, sprintf('%i',fnum)),'jpeg');  
+            M(ii)= getframe(gca);
+        end % end of plotting function            
     end % end of image file loop
     
     fprintf('time elapsed = %6.2f\n',cputime-time)
+    fprintf('%i frames could not be fit with a spline\n',err)
 end % end of function
