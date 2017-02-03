@@ -1,4 +1,4 @@
-function [B,x] = basis_matrix(n,t,x)
+function [B] = basis_matrix(n,t,x)
 
 
 B = zeros(numel(x),numel(t)-n);
