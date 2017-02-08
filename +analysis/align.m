@@ -8,7 +8,16 @@ function [B,C,Hrot] = align(theta,boundary,center,head)
     B = [cos(theta),-sin(theta);sin(theta),cos(theta)]*aB;
 
 
-    [y2,x2] = find(center == 1);
+    %[y2,x2] = find(center == 1);
+    thinned = center;
+    boundaries = bwboundaries(thinned);
+    [xend,yend] = find( bwmorph(thinned,'endpoints') == 1 );
+    b1 = find(boundaries{1}(:,1) == xend(1) & boundaries{1}(:,2) == yend(1));
+    b2 = find(boundaries{1}(:,1) == xend(2) & boundaries{1}(:,2) == yend(2));
+    pixelLine = boundaries{1}(min(b1,b2):max(b1,b2),:);
+    y2 = pixelLine(:,1);
+    x2 = pixelLine(:,2);
+    
     aC = vertcat(x2',y2');
     C = [cos(theta),-sin(theta);sin(theta),cos(theta)]*aC;
 

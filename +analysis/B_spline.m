@@ -1,7 +1,8 @@
 function [tX,tY,Bx,By] = B_spline(x,y,k)
     % get x,y coordinates
     %[y,x] = find(center == 1);
-
+    x = x(floor(linspace(1,length(x),101)));
+    y = y(floor(linspace(1,length(y),101)));
     % get x knots
     %kxi = horzcat(1,floor((length(x)*[0.05:0.05:1])));
     ki = (length(x)*[0:0.05:1]);
@@ -13,14 +14,14 @@ function [tX,tY,Bx,By] = B_spline(x,y,k)
 
     % get the points to evaluate spline at
 
-    xpts = (linspace(min(knot),max(knot),length(x)));
-    ypts = (linspace(min(knot),max(knot),length(y)));
+    xpts = (linspace(min(knot),max(knot),101)); %length(x)));
+    ypts = (linspace(min(knot),max(knot),101)); %length(y)));
 
 
-    [X,~] = analysis.basis_matrix(k,knot,xpts);
+    [X] = analysis.basis_matrix(k,knot,xpts);
     Bx = (X'*X)\(X'*x);
 
-    [Y,~] = analysis.basis_matrix(k,knot,ypts);
+    [Y] = analysis.basis_matrix(k,knot,ypts);
     By = (Y'*Y)\(Y'*y);
 
     tX = X*Bx;
